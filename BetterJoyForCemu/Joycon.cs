@@ -823,8 +823,12 @@ namespace BetterJoyForCemu {
                         dx = (GyroStickSensitivityX * (cur_rotation[1] - cur_rotation[4])); // yaw
                         dy = -(GyroStickSensitivityY * (cur_rotation[0] - cur_rotation[3])); // pitch
                     } else {
+                        //Yao Lei
+                        //dx = (GyroStickSensitivityX * (gyr_g.Z * dt)); // yaw
+                        //dy = -(GyroStickSensitivityY * (gyr_g.Y * dt)); // pitch
+
                         dx = (GyroStickSensitivityX * (gyr_g.Z * dt)); // yaw
-                        dy = -(GyroStickSensitivityY * (gyr_g.Y * dt)); // pitch
+                        dy = (GyroStickSensitivityY * (gyr_g.Y * dt)); // pitch
                     }
 
                     control_stick[0] = Math.Max(-1.0f, Math.Min(1.0f, control_stick[0] / GyroStickReduction + dx));
@@ -1158,13 +1162,17 @@ namespace BetterJoyForCemu {
             if (print) { PrintArray(buf_, DebugType.COMMS, len, 11, "Subcommand 0x" + string.Format("{0:X2}", sc) + " sent. Data: 0x{0:S}"); };
             HIDapi.hid_write(handle, buf_, new UIntPtr(len + 11));
             int tries = 0;
-            do {
+            /*do {
                 int res = HIDapi.hid_read_timeout(handle, response, new UIntPtr(report_len), 100);
                 if (res < 1) DebugPrint("No response.", DebugType.COMMS);
                 else if (print) { PrintArray(response, DebugType.COMMS, report_len - 1, 1, "Response ID 0x" + string.Format("{0:X2}", response[0]) + ". Data: 0x{0:S}"); }
                 tries++;
             } while (tries < 10 && response[0] != 0x21 && response[14] != sc);
-
+            */
+            //Yao Lei
+            int res = HIDapi.hid_read_timeout(handle, response, new UIntPtr(report_len), 100);
+            if (res < 1) DebugPrint("No response.", DebugType.COMMS);
+            else if (print) { PrintArray(response, DebugType.COMMS, report_len - 1, 1, "Response ID 0x" + string.Format("{0:X2}", response[0]) + ". Data: 0x{0:S}"); }
             return response;
         }
 
@@ -1285,6 +1293,21 @@ namespace BetterJoyForCemu {
                 PrintArray(gyr_neutral, len: 3, d: DebugType.IMU, format: "Factory gyro neutral position: {0:S}");
             }
             HIDapi.hid_set_nonblocking(handle, 1);
+
+            //Yao Lei
+            stick_cal[0] = 2048;
+            stick_cal[1] = 2048;
+            stick_cal[2] = 2048;
+            stick_cal[3] = 2048;
+            stick_cal[4] = 2048;
+            stick_cal[5] = 2048;
+            //Yao Lei
+            stick2_cal[0] = 2048;
+            stick2_cal[1] = 2048;
+            stick2_cal[2] = 2048;
+            stick2_cal[3] = 2048;
+            stick2_cal[4] = 2048;
+            stick2_cal[5] = 2048;
         }
 
         private byte[] ReadSPI(byte addr1, byte addr2, uint len, bool print = false) {
