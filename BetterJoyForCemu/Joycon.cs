@@ -823,10 +823,10 @@ namespace BetterJoyForCemu {
                         dx = (GyroStickSensitivityX * (cur_rotation[1] - cur_rotation[4])); // yaw
                         dy = -(GyroStickSensitivityY * (cur_rotation[0] - cur_rotation[3])); // pitch
                     } else {
-                        //Yao Lei
+
                         //dx = (GyroStickSensitivityX * (gyr_g.Z * dt)); // yaw
                         //dy = -(GyroStickSensitivityY * (gyr_g.Y * dt)); // pitch
-
+                        //Yao Lei
                         dx = (GyroStickSensitivityX * (gyr_g.Z * dt)); // yaw
                         dy = (GyroStickSensitivityY * (gyr_g.Y * dt)); // pitch
                     }
@@ -1161,8 +1161,8 @@ namespace BetterJoyForCemu {
             else ++global_count;
             if (print) { PrintArray(buf_, DebugType.COMMS, len, 11, "Subcommand 0x" + string.Format("{0:X2}", sc) + " sent. Data: 0x{0:S}"); };
             HIDapi.hid_write(handle, buf_, new UIntPtr(len + 11));
-            int tries = 0;
-            /*do {
+            /*int tries = 0;
+            do {
                 int res = HIDapi.hid_read_timeout(handle, response, new UIntPtr(report_len), 100);
                 if (res < 1) DebugPrint("No response.", DebugType.COMMS);
                 else if (print) { PrintArray(response, DebugType.COMMS, report_len - 1, 1, "Response ID 0x" + string.Format("{0:X2}", response[0]) + ". Data: 0x{0:S}"); }
@@ -1243,9 +1243,10 @@ namespace BetterJoyForCemu {
                 deadzone2 = (UInt16)((buf_[4] << 8) & 0xF00 | buf_[3]);
             }
 
+            
             buf_ = ReadSPI(0x60, (isLeft ? (byte)0x86 : (byte)0x98), 16);
             deadzone = (UInt16)((buf_[4] << 8) & 0xF00 | buf_[3]);
-
+            
             buf_ = ReadSPI(0x80, 0x28, 10);
             acc_neutral[0] = (Int16)(buf_[0] | ((buf_[1] << 8) & 0xff00));
             acc_neutral[1] = (Int16)(buf_[2] | ((buf_[3] << 8) & 0xff00));
